@@ -5,6 +5,7 @@
 #include <cmath>
 #include <limits>
 #include <iostream>
+#include <memory>
 using std::cout;
 using std::endl;
 
@@ -58,17 +59,21 @@ BotStrategyComputeLinesIntersection::~BotStrategyComputeLinesIntersection()
 // if ball traectory does not intersect player side, bot follows the ball
 // if balls moves away, bot moves to center
 
-void BotStrategyComputeLinesIntersection::useStrategy(Player *bot, Ball *ball, double timePassed)
+void BotStrategyComputeLinesIntersection::useStrategy(const BotStrategyArgs &args) const
 {
+    Ball *ball = args.ball;
+    Player *bot = args.bot;
+
     // creating dummy ball as target for movement with it's base position on Player
-    Ball *dummy = new Ball(ball->angle());
-    dummy->setPos(bot->pos()); //  dummy start position set on player's pos i.e. dont move
+    static std::unique_ptr<Ball> dummy(new Ball);
 
     if (ballMovesToPlayer(bot, ball)) {
-        // ball traectory
-        Point2F p1 = ball->getCenter(); // ball current pos
+        dummy->setPos(ball->pos());
+        dummy->setAngle(ball->angle());
         dummy->move(20.0);
-        Point2F p2 = dummy->getCenter(); // ball position after 20 seconds of movement
+
+        Point2F p1 = ball->getCenter();
+        Point2F p2 = dummy->getCenter();
 
         // Vertical line that goes through player center on X coordinate
         Point2F p3(bot->getCenter().x, 0);
@@ -78,16 +83,17 @@ void BotStrategyComputeLinesIntersection::useStrategy(Player *bot, Ball *ball, d
         if (i(p1, p2, p3, p4)) {
             if (i.m_intersectionPoint.y > 0 && i.m_intersectionPoint.y < GameInfo::gameHeight) {
                 dummy->setPos(i.m_intersectionPoint);
+                BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
             } else if (ballOnPlayerSide(bot, ball)) {
                 // follow the ball if it's traectory does not intersect player side
                 dummy->setPos(ball->pos());
+                BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
             }
+
         }
     } else {
         // move to center if ball moves away
-        dummy->setPos({0, static_cast<float>(GameInfo::gameHeight / 2)});
+        dummy->setPos({0, GameInfo::gameHeight / 2.0f});
+        BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
     }
-
-    BotStrategyComputeCenter::useStrategy(bot, dummy, timePassed);
-    delete dummy;
 }

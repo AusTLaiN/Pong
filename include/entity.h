@@ -23,7 +23,6 @@ public:
     double velocity() const;
     void setVelocity(double velocity);
 
-
     void validatePosition();
     Point2F getCenter() const;
 

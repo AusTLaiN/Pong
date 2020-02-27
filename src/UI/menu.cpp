@@ -75,7 +75,7 @@ void Menu::draw()
         SDL_Color color = {0xFF, 0xFF, 0xFF, 0};
         int mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
-        if (m_buttons[i].containsPoint(Point2F(mouseX, mouseY))) {
+        if (b.containsPoint(Point2F(mouseX, mouseY))) {
             color = {0x00, 0xFF, 0x00, 0};
         }
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <memory>
 
 using namespace std;
 using namespace std::chrono;
@@ -24,10 +25,6 @@ GameManager::~GameManager()
 
     TTF_CloseFont(m_font);
     TTF_Quit();
-
-    delete m_game;
-    delete m_controller;
-    delete m_view;
 }
 
 int GameManager::initMedia()
@@ -85,30 +82,33 @@ void GameManager::initGame()
     for (auto p : {p1, p2}) {
         if (!p->isHuman()) {
             ComputerPlayer *bot = dynamic_cast<ComputerPlayer *>(p);
+            shared_ptr<IBotStrategy> botStrat;
 
             switch (m_botStrategy) {
                 case GameInfo::BotStrategy::Simple:
-                bot->setStrategy(new BotStrategySimple);
+                botStrat = make_shared<BotStrategySimple>();
                 break;
                 case GameInfo::BotStrategy::ComputeCenter:
-                bot->setStrategy(new BotStrategyComputeCenter);
+                botStrat = make_shared<BotStrategyComputeCenter>();
                 break;
                 case GameInfo::BotStrategy::Smart:
-                bot->setStrategy(new BotStrategySmart);
+                botStrat = make_shared<BotStrategySmart>();
                 break;
                 case GameInfo::BotStrategy::ComputeLinesIntersection:
-                bot->setStrategy(new BotStrategyComputeLinesIntersection);
+                botStrat = make_shared<BotStrategyComputeLinesIntersection>();
                 break;
 
                 default:
                 break;
             }
+
+            bot->setStrategy(botStrat);
         }
     }
 
-    m_game = new Game(p1, p2, new Ball);
-    m_controller = new GameController;
-    m_view = new GameView;
+    m_game.reset(new Game(p1, p2, new Ball));
+    m_controller.reset(new GameController);
+    m_view.reset(new GameView);
     m_view->setRenderer(m_renderer);
     m_view->setFont(m_font);
 }
@@ -162,9 +162,7 @@ int GameManager::showUi()
         m_botStrategy = static_cast<GameInfo::BotStrategy>(m_botStrategyMenu.show());
     }
 
-    if ((m_gameMode != GameInfo::GameMode::Undefined &&
-        m_gameMode != GameInfo::GameMode::PlayerVersusPlayer)
-        && m_botStrategy == GameInfo::BotStrategy::Undefined) {
+    if (m_gameMode != GameInfo::GameMode::PlayerVersusPlayer && m_botStrategy == GameInfo::BotStrategy::Undefined) {
         return 2;
     }
 
@@ -183,16 +181,6 @@ int GameManager::showUi()
     cout << "Bot strategy selected : " << botStrat << " " << botStratStr << endl;
 
     return 0;
-}
-
-SDL_Renderer *GameManager::renderer() const
-{
-    return m_renderer;
-}
-
-TTF_Font *GameManager::font() const
-{
-    return m_font;
 }
 
 void GameManager::createUi()
@@ -216,7 +204,7 @@ Menu GameManager::createMenu(const std::string &menuText, const std::vector<stri
 
     m.setSize(textSize(menuText));
 
-    for (int i = 0; i < options.size(); ++i) {
+    for (size_t i = 0; i < options.size(); ++i) {
         Button b;
         Size size = textSize(options[i]);
 
@@ -236,7 +224,7 @@ Menu GameManager::createMenu(const std::string &menuText, const std::vector<stri
     float menuPosY = (GameInfo::gameHeight - (buttonHeight + buttonPadding) * options.size()) / 2;
     m.setPos({menuPosX, buttonPadding * 5});
 
-    for (int i = 0; i < menuButtons.size(); ++i) {
+    for (size_t i = 0; i < menuButtons.size(); ++i) {
         int wDiff = (m.size().width - menuButtons[i].size().width) / 2;
         menuButtons[i].setPos({menuPosX + wDiff, menuPosY + (buttonHeight  + buttonPadding) * i});
     }

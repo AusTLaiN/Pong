@@ -11,7 +11,7 @@ public:
 
     // IBotStrategy interface
 public:
-    virtual void useStrategy(Player *bot, Ball *ball, double timePassed) override;
+    virtual void useStrategy(const BotStrategyArgs &args) const override;
 };
 
 #endif // BOTSTRATEGYSIMPLE_H

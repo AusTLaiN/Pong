@@ -2,6 +2,7 @@
 #define GAMESTATE_H
 
 #include <vector>
+#include <memory>
 
 #include "player.h"
 #include "ball.h"
@@ -14,12 +15,12 @@ public:
 
     std::vector<Player *> getPlayers() const;
 
-    Ball *ball() const;
-    void setBall(Ball *ball);
-
     void update(double timePassed);
     bool roundFinished() const;
     void startNewRound();
+
+    Ball *ball() const;
+    void setBall(Ball *ball);
 
 private:
     void updateBall(double timePassed);
@@ -28,6 +29,7 @@ private:
     Player *m_player1 = nullptr;
     Player *m_player2 = nullptr;
     Ball *m_ball = nullptr;
+
     bool m_roundFinished = false;
 };
 

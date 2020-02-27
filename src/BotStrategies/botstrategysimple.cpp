@@ -1,21 +1,25 @@
 #include "botstrategysimple.h"
 
-#include "computerplayer.h"
+#include <iostream>
+using namespace std;
 
 BotStrategySimple::BotStrategySimple()
 {
-
+    //cout << "BotStrategySimple:BotStrategySimple" << endl;
 }
 
 BotStrategySimple::~BotStrategySimple()
 {
-
+    //cout << "BotStrategySimple::~BotStrategySimple" << endl;
 }
 
-void BotStrategySimple::useStrategy(Player *bot, Ball *ball, double timePassed)
+void BotStrategySimple::useStrategy(const BotStrategyArgs &args) const
 {
+    Ball *ball = args.ball;
+    Player *bot = args.bot;
+
     Point2F botPos = bot->pos();
-    float velocity = bot->velocity() * timePassed;
+    double velocity = bot->velocity() * args.timePassed;
 
     if (bot->pos().y > ball->pos().y) {
         botPos.y -= velocity;

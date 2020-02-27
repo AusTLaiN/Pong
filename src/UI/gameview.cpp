@@ -3,7 +3,7 @@
 #include "gameinfo.h"
 
 #include <iostream>
-#include <algorithm>
+#include <memory>
 #include <string>
 using std::cout;
 using std::endl;
@@ -40,13 +40,12 @@ void GameView::drawLine(const Point2F &p1, const Point2F &p2)
 
 void GameView::debugDrawBallTraectory(Ball *b)
 {
-    Point2F p1 = b->getCenter();
-    Ball *dummy = new Ball;
+    static std::unique_ptr<Ball> dummy(new Ball);
     dummy->setVelocity(b->velocity());
     dummy->setAngle(b->angle());
     dummy->move(100.0);
+    Point2F p1 = b->getCenter();
     Point2F p2 = dummy->pos();
-    delete dummy;
 
     drawLine(p1, p2);
 }
@@ -81,7 +80,7 @@ void GameView::draw(const Game &game)
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     auto players = game.getPlayers();
     for (auto player : players) {
-        drawEntity(static_cast<Entity *>(player));
+        drawEntity(player);
     }
 
     // draw players score

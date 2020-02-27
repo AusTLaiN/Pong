@@ -5,6 +5,8 @@
 #include "ball.h"
 #include "ibotstrategy.h"
 
+#include <memory>
+
 class ComputerPlayer : public Player
 {
 public:
@@ -14,11 +16,11 @@ public:
 
     void useStrategy(Ball *ball, double timePassed);
 
-    IBotStrategy *strategy() const;
-    void setStrategy(IBotStrategy *strategy);
+    std::shared_ptr<IBotStrategy> strategy() const;
+    void setStrategy(const std::shared_ptr<IBotStrategy> &strategy);
 
 protected:
-    IBotStrategy *m_strategy = nullptr;
+    std::shared_ptr<IBotStrategy> m_strategy;
 };
 
 #endif // COMPUTERPLAYER_H

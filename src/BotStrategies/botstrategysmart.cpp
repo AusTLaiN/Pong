@@ -3,6 +3,8 @@
 #include "gameinfo.h"
 
 #include <cmath>
+#include <iostream>
+#include <memory>
 
 BotStrategySmart::BotStrategySmart()
 {
@@ -17,15 +19,16 @@ BotStrategySmart::~BotStrategySmart()
 // improved ComputeCenter strategy
 // if ball is moving away we move closer to the center
 
-void BotStrategySmart::useStrategy(Player *bot, Ball *ball, double timePassed)
+void BotStrategySmart::useStrategy(const BotStrategyArgs &args) const
 {
+    Ball *ball = args.ball;
+    Player *bot = args.bot;
+
     if (ballMovesToPlayer(bot, ball) && ballOnPlayerSide(bot, ball)) {
-        BotStrategyComputeCenter::useStrategy(bot, ball, timePassed);
+        BotStrategyComputeCenter::useStrategy({bot, ball, args.timePassed});
     } else {
-        // create dummy ball as target for movement on Player's base position
-        Ball *dummy = new Ball;
-        dummy->setPos({static_cast<float>(GameInfo::gameWidth / 2), static_cast<float>(GameInfo::gameHeight / 2)});
-        BotStrategyComputeCenter::useStrategy(bot, dummy, timePassed);
-        delete dummy;
+        // create dummy ball as target for movement
+        static std::unique_ptr<Ball> dummy(new Ball(Point2F(GameInfo::gameWidth / 2.0f, GameInfo::gameHeight / 2.0f)));
+        BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
     }
 }

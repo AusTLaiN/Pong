@@ -16,23 +16,21 @@ ComputerPlayer::ComputerPlayer(const Point2F &pos) :
 
 ComputerPlayer::~ComputerPlayer()
 {
-    delete m_strategy;
 }
 
 void ComputerPlayer::useStrategy(Ball *ball, double timePassed)
 {
     if (m_strategy != nullptr) {
-        m_strategy->useStrategy(this, ball, timePassed);
+        m_strategy->useStrategy({this, ball, timePassed});
     }
 }
 
-IBotStrategy *ComputerPlayer::strategy() const
+std::shared_ptr<IBotStrategy> ComputerPlayer::strategy() const
 {
     return m_strategy;
 }
 
-void ComputerPlayer::setStrategy(IBotStrategy *strategy)
+void ComputerPlayer::setStrategy(const std::shared_ptr<IBotStrategy> &strategy)
 {
-    delete m_strategy;
     m_strategy = strategy;
 }

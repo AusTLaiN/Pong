@@ -18,6 +18,12 @@ Ball::Ball(double angle) :
     m_angle = angle;
 }
 
+Ball::Ball(const Point2F &pos, double angle) :
+    Entity(pos, Size(GameInfo::ballRadius, GameInfo::ballRadius))
+{
+    m_angle = angle;
+}
+
 Ball::~Ball()
 {
 

@@ -34,11 +34,11 @@ void Game::updateBall(double timePassed)
     m_ball->move(timePassed);
     m_ball->setVelocity(m_ball->velocity() + GameInfo::ballAcceleration * timePassed);
 
-    static const float boundSize = 1e6f;
-    static std::unique_ptr<Entity> leftBound(new Entity(Point2F(-boundSize, 0), Size(int(boundSize), GameInfo::gameHeight)));
-    static std::unique_ptr<Entity> rightBound(new Entity(Point2F(GameInfo::gameWidth, 0), Size(int(boundSize), GameInfo::gameHeight)));
-    static std::unique_ptr<Entity> topBound(new Entity(Point2F(0, -boundSize), Size(GameInfo::gameWidth, int(boundSize))));
-    static std::unique_ptr<Entity> bottomBound(new Entity(Point2F(0, GameInfo::gameHeight), Size(GameInfo::gameWidth, int(boundSize))));
+    static const int boundSize = 1e6;
+    static std::unique_ptr<Entity> leftBound(new Entity(Point2F(-boundSize, 0), Size(boundSize, GameInfo::gameHeight)));
+    static std::unique_ptr<Entity> rightBound(new Entity(Point2F(GameInfo::gameWidth, 0), Size(boundSize, GameInfo::gameHeight)));
+    static std::unique_ptr<Entity> topBound(new Entity(Point2F(0, -boundSize), Size(GameInfo::gameWidth, boundSize)));
+    static std::unique_ptr<Entity> bottomBound(new Entity(Point2F(0, GameInfo::gameHeight), Size(GameInfo::gameWidth, boundSize)));
 
     // Player1 on the left side
     // Player2 on the right side
@@ -80,6 +80,17 @@ void Game::updateBall(double timePassed)
     m_ball->validatePosition();
 }
 
+Ball *Game::ball() const
+{
+    return m_ball;
+}
+
+void Game::setBall(Ball *ball)
+{
+    delete m_ball;
+    m_ball = ball;
+}
+
 void Game::startNewRound()
 {
     m_ball->setPos({GameInfo::ballStartPositionX, GameInfo::ballStartPositionY});
@@ -95,16 +106,6 @@ void Game::startNewRound()
 std::vector<Player *> Game::getPlayers() const
 {
     return {m_player1, m_player2};
-}
-
-Ball *Game::ball() const
-{
-    return m_ball;
-}
-
-void Game::setBall(Ball *ball)
-{
-    m_ball = ball;
 }
 
 void Game::update(double timePassed)

@@ -10,6 +10,8 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
+#include <memory>
+
 class GameManager
 {
 public:
@@ -18,9 +20,6 @@ public:
 
     int initMedia();
     void initGame();
-
-    SDL_Renderer *renderer() const;
-    TTF_Font *font() const;
 
     void createUi();
     int showUi();
@@ -42,9 +41,9 @@ private:
     GameInfo::GameMode m_gameMode = GameInfo::GameMode::Undefined;
     GameInfo::BotStrategy m_botStrategy = GameInfo::BotStrategy::Undefined;
 
-    Game *m_game = nullptr;
-    GameController *m_controller = nullptr;
-    GameView *m_view = nullptr;
+    std::unique_ptr<Game> m_game;
+    std::unique_ptr<GameController> m_controller;
+    std::unique_ptr<GameView> m_view;
 
 };
 

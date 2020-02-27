@@ -1,23 +1,27 @@
 #include "botstrategycomputecenter.h"
 
-#include "computerplayer.h"
+#include <iostream>
+using namespace std;
 
 BotStrategyComputeCenter::BotStrategyComputeCenter()
 {
-
+    //cout << "BotStrategyComputeCenter::BotStrategyComputeCenter" << endl;
 }
 
 BotStrategyComputeCenter::~BotStrategyComputeCenter()
 {
-
+    //cout << "BotStrategyComputeCenter::~BotStrategyComputeCenter" << endl;
 }
 
-void BotStrategyComputeCenter::useStrategy(Player *bot, Ball *ball, double timePassed)
+void BotStrategyComputeCenter::useStrategy(const BotStrategyArgs &args) const
 {
+    Ball *ball = args.ball;
+    Player *bot = args.bot;
+
     Point2F botPos = bot->pos();
     Point2F botCenter = bot->getCenter();
     Point2F ballCenter = ball->getCenter();
-    float velocity = bot->velocity() * timePassed;
+    double velocity = bot->velocity() * args.timePassed;
 
     if (botCenter.y > ballCenter.y) {
         botPos.y -= velocity;
