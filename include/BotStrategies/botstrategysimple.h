@@ -7,7 +7,7 @@ class BotStrategySimple : public IBotStrategy
 {
 public:
     BotStrategySimple();
-    virtual ~BotStrategySimple();
+    virtual ~BotStrategySimple() override;
 
     // IBotStrategy interface
 public:

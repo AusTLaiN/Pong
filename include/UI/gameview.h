@@ -6,6 +6,8 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 
+#include <memory>
+
 class GameView
 {
 public:
@@ -21,9 +23,9 @@ public:
     void setFont(TTF_Font *font);
 
 private:
-    void drawEntity(Entity *obj);
+    void drawEntity(const std::shared_ptr<Entity> &obj);
     void drawLine(const Point2F &p1, const Point2F &p2);
-    void debugDrawBallTraectory(Ball *b);
+    void debugDrawBallTraectory(const std::shared_ptr<Ball> &b);
 
 private:
     SDL_Renderer *m_renderer = nullptr;

@@ -1,7 +1,6 @@
 #include "collider.h"
 
 #include <cmath>
-
 #include <iostream>
 using namespace std;
 
@@ -36,9 +35,9 @@ Collider::Collider()
 
 }
 
-std::vector<Entity *> Collider::collisionWithObjects(Entity *e, const std::vector<Entity *> &objects) const
+std::vector<std::shared_ptr<Entity>> Collider::collisionWithObjects(const std::shared_ptr<Entity> &e, const std::vector<std::shared_ptr<Entity>> &objects) const
 {
-    std::vector<Entity *> collided;
+    std::vector<std::shared_ptr<Entity>> collided;
     Point2F pos = e->pos();
     Size size = e->size();
 
@@ -56,14 +55,14 @@ std::vector<Entity *> Collider::collisionWithObjects(Entity *e, const std::vecto
                 (leftTop1.y < rightBottom2.y) && (rightBottom1.y > leftTop2.y)) {
             collided.push_back(obj);
 
-            //cout << "Collision with object " << *obj << " || Collision side : " << getCollisonSide(e, obj) << endl;
+            //std::cout << "Collision with object " << *obj << " || Collision side : " << getCollisonSide(e, obj) << std::endl;
         }
     }
 
     return collided;
 }
 
-bool Collider::collision(Entity *first, Entity *second) const
+bool Collider::collision(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second) const
 {
     return !collisionWithObjects(first, {second}).empty();
 }
@@ -71,7 +70,7 @@ bool Collider::collision(Entity *first, Entity *second) const
 // computes distance from each side of object @first to @second
 // returns closest one
 
-Collider::CollisionSide Collider::getCollisonSide(Entity *first, Entity *second) const
+Collider::CollisionSide Collider::getCollisonSide(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second) const
 {
     int side = CollisionSide::NoCollision;
 

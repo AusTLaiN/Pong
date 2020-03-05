@@ -10,25 +10,25 @@
 class Game
 {
 public:
-    Game(Player* player1, Player *player2, Ball *ball);
+    Game(const std::shared_ptr<Player> &p1, const std::shared_ptr<Player> &p2, const std::shared_ptr<Ball> &ball);
     ~Game();
 
-    std::vector<Player *> getPlayers() const;
+    std::vector<std::shared_ptr<Player>> getPlayers() const;
 
     void update(double timePassed);
     bool roundFinished() const;
     void startNewRound();
 
-    Ball *ball() const;
-    void setBall(Ball *ball);
+    std::shared_ptr<Ball> getBall() const;
+    void setBall(const std::shared_ptr<Ball> &ball);
 
 private:
     void updateBall(double timePassed);
 
 private:
-    Player *m_player1 = nullptr;
-    Player *m_player2 = nullptr;
-    Ball *m_ball = nullptr;
+    std::shared_ptr<Player> m_player1;
+    std::shared_ptr<Player> m_player2;
+    std::shared_ptr<Ball> m_ball;
 
     bool m_roundFinished = false;
 };

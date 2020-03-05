@@ -17,7 +17,7 @@ GameView::~GameView()
 
 }
 
-void GameView::drawEntity(Entity *obj)
+void GameView::drawEntity(const std::shared_ptr<Entity> &obj)
 {
     if (obj == nullptr) {
         std::cout << "GameView::drawEntity fail : entity is null" << endl;
@@ -38,7 +38,7 @@ void GameView::drawLine(const Point2F &p1, const Point2F &p2)
     SDL_RenderDrawLine(m_renderer, p1.x, p1.y, p2.x, p2.y);
 }
 
-void GameView::debugDrawBallTraectory(Ball *b)
+void GameView::debugDrawBallTraectory(const std::shared_ptr<Ball> &b)
 {
     static std::unique_ptr<Ball> dummy(new Ball);
     dummy->setVelocity(b->velocity());
@@ -105,7 +105,7 @@ void GameView::draw(const Game &game)
 
     // draw ball
     SDL_SetRenderDrawColor(m_renderer, 0xFF, 0x1A, 0x3C, 0xFF);
-    drawEntity(game.ball());
+    drawEntity(game.getBall());
 
     // debug draw ball traectory
     // debugDrawBallTraectory(game.ball());

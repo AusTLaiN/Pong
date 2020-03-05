@@ -12,7 +12,7 @@ void GameController::readInput(const Game &game, double timePassed) const
     auto player1 = game.getPlayers().front();
     auto player2 = game.getPlayers().back();
 
-    auto move = [timePassed](Player *player, double v) {
+    auto move = [timePassed](const std::shared_ptr<Player> &player, double v) {
         if (player == nullptr) {
             return;
         }

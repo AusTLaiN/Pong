@@ -1,22 +1,21 @@
 #include "botstrategycomputecenter.h"
 
 #include <iostream>
-using namespace std;
 
 BotStrategyComputeCenter::BotStrategyComputeCenter()
 {
-    //cout << "BotStrategyComputeCenter::BotStrategyComputeCenter" << endl;
+    //std::cout << "BotStrategyComputeCenter::BotStrategyComputeCenter" << std::endl;
 }
 
 BotStrategyComputeCenter::~BotStrategyComputeCenter()
 {
-    //cout << "BotStrategyComputeCenter::~BotStrategyComputeCenter" << endl;
+    //std::cout << "BotStrategyComputeCenter::~BotStrategyComputeCenter" << std::endl;
 }
 
 void BotStrategyComputeCenter::useStrategy(const BotStrategyArgs &args) const
 {
-    Ball *ball = args.ball;
-    Player *bot = args.bot;
+    auto ball = args.ball;
+    auto bot = args.bot;
 
     Point2F botPos = bot->pos();
     Point2F botCenter = bot->getCenter();

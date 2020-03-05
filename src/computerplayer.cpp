@@ -2,10 +2,14 @@
 
 #include "gameinfo.h"
 
+#include <iostream>
+
 ComputerPlayer::ComputerPlayer()
 {
     m_isHuman = false;
     m_velocity = GameInfo::computerPlayerVelocity;
+
+    //std::cout << "ComputerPlayer::ComputerPlayer" << std::endl;
 }
 
 ComputerPlayer::ComputerPlayer(const Point2F &pos) :
@@ -16,12 +20,13 @@ ComputerPlayer::ComputerPlayer(const Point2F &pos) :
 
 ComputerPlayer::~ComputerPlayer()
 {
+    //std::cout << "ComputerPlayer::~ComputerPlayer" << std::endl;
 }
 
-void ComputerPlayer::useStrategy(Ball *ball, double timePassed)
+void ComputerPlayer::useStrategy(const std::shared_ptr<Ball> &ball, double timePassed)
 {
     if (m_strategy != nullptr) {
-        m_strategy->useStrategy({this, ball, timePassed});
+        m_strategy->useStrategy({shared_from_this(), ball, timePassed});
     }
 }
 

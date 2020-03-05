@@ -7,7 +7,7 @@ class BotStrategyComputeCenter : public IBotStrategy
 {
 public:
     BotStrategyComputeCenter();
-    virtual ~BotStrategyComputeCenter();
+    virtual ~BotStrategyComputeCenter() override;
 
     // IBotStrategy interface
 public:

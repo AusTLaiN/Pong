@@ -1,22 +1,21 @@
 #include "botstrategysimple.h"
 
 #include <iostream>
-using namespace std;
 
 BotStrategySimple::BotStrategySimple()
 {
-    //cout << "BotStrategySimple:BotStrategySimple" << endl;
+    //std::cout << "BotStrategySimple:BotStrategySimple" << std::endl;
 }
 
 BotStrategySimple::~BotStrategySimple()
 {
-    //cout << "BotStrategySimple::~BotStrategySimple" << endl;
+    //std::cout << "BotStrategySimple::~BotStrategySimple" << std::endl;
 }
 
 void BotStrategySimple::useStrategy(const BotStrategyArgs &args) const
 {
-    Ball *ball = args.ball;
-    Player *bot = args.bot;
+    auto ball = args.ball;
+    auto bot = args.bot;
 
     Point2F botPos = bot->pos();
     double velocity = bot->velocity() * args.timePassed;

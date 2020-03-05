@@ -48,6 +48,16 @@ int GameManager::initMedia()
     m_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     m_font = TTF_OpenFont(GameInfo::fontPath, GameInfo::fontSize);
 
+    if (m_renderer == nullptr) {
+        cout << "Failed to create SDL Renderer" << endl;
+        return 4;
+    }
+
+    if (m_font == nullptr) {
+        cout << "Failed to load Font" << endl;
+        return 5;
+    }
+
     return 0;
 }
 
@@ -55,21 +65,21 @@ void GameManager::initGame()
 {
     srand(time(nullptr));
 
-    Player *p1 = nullptr;
-    Player *p2 = nullptr;
+    std::shared_ptr<Player> p1;
+    std::shared_ptr<Player> p2;
 
     switch (m_gameMode) {
         case GameInfo::GameMode::PlayerVersusPlayer:
-        p1 = new Player;
-        p2 = new Player;
+        p1 = std::make_shared<Player>();
+        p2 = std::make_shared<Player>();
         break;
         case GameInfo::GameMode::PlayerVersusComputer:
-        p1 = new Player;
-        p2 = new ComputerPlayer;
+        p1 = std::make_shared<Player>();
+        p2 = std::make_shared<ComputerPlayer>();
         break;
         case GameInfo::GameMode::ComputerVersusComputer:
-        p1 = new ComputerPlayer;
-        p2 = new ComputerPlayer;
+        p1 = std::make_shared<ComputerPlayer>();
+        p2 = std::make_shared<ComputerPlayer>();
         break;
 
         default:
@@ -79,34 +89,33 @@ void GameManager::initGame()
     p1->setPos({GameInfo::player1StartPositionX, GameInfo::player1StartPositionY});
     p2->setPos({GameInfo::player2StartPositionX, GameInfo::player2StartPositionY});
 
+    shared_ptr<IBotStrategy> botStrat;
+    switch (m_botStrategy) {
+        case GameInfo::BotStrategy::Simple:
+        botStrat = make_shared<BotStrategySimple>();
+        break;
+        case GameInfo::BotStrategy::ComputeCenter:
+        botStrat = make_shared<BotStrategyComputeCenter>();
+        break;
+        case GameInfo::BotStrategy::Smart:
+        botStrat = make_shared<BotStrategySmart>();
+        break;
+        case GameInfo::BotStrategy::ComputeLinesIntersection:
+        botStrat = make_shared<BotStrategyComputeLinesIntersection>();
+        break;
+
+        default:
+        break;
+    }
+
     for (auto p : {p1, p2}) {
-        if (!p->isHuman()) {
-            ComputerPlayer *bot = dynamic_cast<ComputerPlayer *>(p);
-            shared_ptr<IBotStrategy> botStrat;
-
-            switch (m_botStrategy) {
-                case GameInfo::BotStrategy::Simple:
-                botStrat = make_shared<BotStrategySimple>();
-                break;
-                case GameInfo::BotStrategy::ComputeCenter:
-                botStrat = make_shared<BotStrategyComputeCenter>();
-                break;
-                case GameInfo::BotStrategy::Smart:
-                botStrat = make_shared<BotStrategySmart>();
-                break;
-                case GameInfo::BotStrategy::ComputeLinesIntersection:
-                botStrat = make_shared<BotStrategyComputeLinesIntersection>();
-                break;
-
-                default:
-                break;
-            }
-
+        auto bot = dynamic_cast<ComputerPlayer *>(p.get());
+        if (bot != nullptr) {
             bot->setStrategy(botStrat);
         }
     }
 
-    m_game.reset(new Game(p1, p2, new Ball));
+    m_game.reset(new Game(p1, p2, std::make_shared<Ball>()));
     m_controller.reset(new GameController);
     m_view.reset(new GameView);
     m_view->setRenderer(m_renderer);

@@ -3,6 +3,7 @@
 #include "gameinfo.h"
 
 #include <cmath>
+#include <iostream>
 
 Ball::Ball()
 {
@@ -10,6 +11,8 @@ Ball::Ball()
     m_pos.y = GameInfo::ballStartPositionY;
     m_size.width = m_size.height = GameInfo::ballRadius;
     m_velocity = GameInfo::ballVelocity;
+
+    //std::cout << "Ball::Ball" << std::endl;
 }
 
 Ball::Ball(double angle) :
@@ -19,14 +22,15 @@ Ball::Ball(double angle) :
 }
 
 Ball::Ball(const Point2F &pos, double angle) :
-    Entity(pos, Size(GameInfo::ballRadius, GameInfo::ballRadius))
+    Ball()
 {
     m_angle = angle;
+    m_pos = pos;
 }
 
 Ball::~Ball()
 {
-
+    //std::cout << "Ball::~Ball" << std::endl;
 }
 
 double Ball::angle() const

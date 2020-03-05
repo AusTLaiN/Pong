@@ -7,14 +7,14 @@
 
 #include <memory>
 
-class ComputerPlayer : public Player
+class ComputerPlayer : public Player, public std::enable_shared_from_this<ComputerPlayer>
 {
 public:
     ComputerPlayer();
     ComputerPlayer(const Point2F &pos);
-    virtual ~ComputerPlayer();
+    virtual ~ComputerPlayer() override;
 
-    void useStrategy(Ball *ball, double timePassed);
+    void useStrategy(const std::shared_ptr<Ball> &ball, double timePassed);
 
     std::shared_ptr<IBotStrategy> strategy() const;
     void setStrategy(const std::shared_ptr<IBotStrategy> &strategy);

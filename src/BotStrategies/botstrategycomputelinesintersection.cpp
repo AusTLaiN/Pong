@@ -61,11 +61,11 @@ BotStrategyComputeLinesIntersection::~BotStrategyComputeLinesIntersection()
 
 void BotStrategyComputeLinesIntersection::useStrategy(const BotStrategyArgs &args) const
 {
-    Ball *ball = args.ball;
-    Player *bot = args.bot;
+    auto ball = args.ball;
+    auto bot = args.bot;
 
     // creating dummy ball as target for movement with it's base position on Player
-    static std::unique_ptr<Ball> dummy(new Ball);
+    static auto dummy = std::make_shared<Ball>();
 
     if (ballMovesToPlayer(bot, ball)) {
         dummy->setPos(ball->pos());
@@ -83,17 +83,17 @@ void BotStrategyComputeLinesIntersection::useStrategy(const BotStrategyArgs &arg
         if (i(p1, p2, p3, p4)) {
             if (i.m_intersectionPoint.y > 0 && i.m_intersectionPoint.y < GameInfo::gameHeight) {
                 dummy->setPos(i.m_intersectionPoint);
-                BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
+                BotStrategyComputeCenter::useStrategy({bot, dummy, args.timePassed});
             } else if (ballOnPlayerSide(bot, ball)) {
                 // follow the ball if it's traectory does not intersect player side
                 dummy->setPos(ball->pos());
-                BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
+                BotStrategyComputeCenter::useStrategy({bot, dummy, args.timePassed});
             }
 
         }
     } else {
         // move to center if ball moves away
         dummy->setPos({0, GameInfo::gameHeight / 2.0f});
-        BotStrategyComputeCenter::useStrategy({bot, dummy.get(), args.timePassed});
+        BotStrategyComputeCenter::useStrategy({bot, dummy, args.timePassed});
     }
 }

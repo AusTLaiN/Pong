@@ -7,7 +7,7 @@ class BotStrategyComputeLinesIntersection : public BotStrategyComputeCenter
 {
 public:
     BotStrategyComputeLinesIntersection();
-    virtual ~BotStrategyComputeLinesIntersection();
+    virtual ~BotStrategyComputeLinesIntersection() override;
 
     // IBotStrategy interface
 public:
